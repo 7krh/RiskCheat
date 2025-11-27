@@ -341,7 +341,7 @@ namespace Functions
 	
 	uintptr_t GetFogOfWarOffset()
 	{
-		uintptr_t GameManager_c = *(uintptr_t*)(sdk::GameAssembly + 0x2A2B9B8);	 //GameManager_TypeInfo
+		uintptr_t GameManager_c = *(uintptr_t*)(sdk::GameAssembly + 44218808);	 //GameManager_TypeInfo
 
 		if (!GameManager_c) return 0;
 
@@ -467,4 +467,4 @@ namespace Functions
 
 #pragma endregion
 
-}
+}aaa
