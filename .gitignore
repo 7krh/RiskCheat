@@ -1,0 +1,10 @@
+# Visual Studio temporary cache
+.vs/
+
+# Build files
+*.obj
+*.pdb
+*.ilk
+Debug/
+Release/
+x64/

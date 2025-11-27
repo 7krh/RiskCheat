@@ -1,7 +1,0 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(538,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (IL2CPP.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5): warning MSB8027: Two or more files with the name of Callback.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\Il2cpp_Resolver\Functions\Callback.cpp, Callback.cpp.
-  LINK : C:\Users\7krh\Desktop\New folder (16)\New folder (16)\New folder (9) - Copy\RiskCheat\x64\Debug\RiskCheat.dll not found or not built by the last incremental link; performing full link
-x64\Debug\Callback.obj : warning LNK4042: object specified more than once; extras ignored
-  ImGui DirectX 11 Kiero Hook.vcxproj -> C:\Users\7krh\Desktop\New folder (16)\New folder (16)\New folder (9) - Copy\RiskCheat\x64\Debug\RiskCheat.dll
-  'pwsh.exe' is not recognized as an internal or external command,
-  operable program or batch file.

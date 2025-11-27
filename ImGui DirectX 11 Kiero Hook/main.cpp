@@ -88,10 +88,10 @@ if (MH_CreateHook(reinterpret_cast<LPVOID*>(Offsets::IsVisible), &Functions::Ter
 
 //"Signature": "void DServerApi__Call (DServerApi_o* __this, DServerApi_delegateLoaded_o* OnLoadedCall, System_Collections_Generic_Dictionary_string__object__o* parameters, const MethodInfo* method);",
 
-if (MH_CreateHook(reinterpret_cast<LPVOID*>(sdk::GameAssembly + 0x133C2C0), &Functions::DServerApi__Call__hk, (LPVOID*)&Functions::DServerApi__Call__org) == MH_OK)
+if (MH_CreateHook(reinterpret_cast<LPVOID*>(sdk::GameAssembly + 20169408), &Functions::DServerApi__Call__hk, (LPVOID*)&Functions::DServerApi__Call__org) == MH_OK)
 {
 
-	MH_EnableHook(reinterpret_cast<LPVOID*>(sdk::GameAssembly + 0x133C2C0));
+	MH_EnableHook(reinterpret_cast<LPVOID*>(sdk::GameAssembly + 20169408));
 }
 
 }
