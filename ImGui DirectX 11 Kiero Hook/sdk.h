@@ -1,5 +1,6 @@
 #pragma once
-#include "il2cpp.h"
+#include "sdk_types.h"
+#include "sdk_accessors.h"
 #include "vec.h"
 #include "vec2.h"
 #include <vector>
@@ -42,9 +43,8 @@ namespace Offsets
 	uintptr_t GetPlayer = 0x0;
 	uintptr_t Encrypt = 0x0;
 	uintptr_t GetDecrypted = 0x0;
-	uintptr_t fogOfWarOffset = 0x0;
-	uintptr_t GameManager = 0x0;
-
+	uintptr_t DServerApi_Call = 0x0;
+	void*     isFogOfWar_Field = nullptr;
 }
 
 namespace vars

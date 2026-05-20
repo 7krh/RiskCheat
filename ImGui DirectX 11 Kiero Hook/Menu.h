@@ -167,14 +167,14 @@ void RenderCardControls(int playerIndex)
 		auto player = Functions::GetPlayer(playerIndex, vars::method);
 		if (player != nullptr) {
 			for (int cardIndex = 0; cardIndex < vars::MAX_CARDS; cardIndex++) {
-				auto playerCard = Functions::GetPlayer(playerIndex, vars::method)->fields.cards->fields._items->m_Items[cardIndex];
+				auto playerCard = sdk::Player_card_at(Functions::GetPlayer(playerIndex, vars::method), cardIndex);
 
 				if (playerCard == nullptr) {
 					vars::selectedCards[playerIndex][cardIndex] = Functions::ReturnPlayerCard(playerIndex, cardIndex);
 				}
-				else if (cardIndex == 2) { 
-					if (playerCard->fields.type != 0 && playerCard->fields.type != 1 &&
-						playerCard->fields.type != 2 && playerCard->fields.type != 3) {
+				else if (cardIndex == 2) {
+					int t = sdk::RiskCard_Type(playerCard);
+					if (t != 0 && t != 1 && t != 2 && t != 3) {
 						vars::selectedCards[playerIndex][cardIndex] = Functions::ReturnPlayerCard(playerIndex, cardIndex);
 					}
 				}
@@ -213,16 +213,16 @@ inline void DrawSectionHeader(const char* text) {
 		TextColored({ 1,0,0,1 }, "Choose a player:");
 		for (int i = 0; i < 6; i++) {
 			if (auto* p = Functions::GetPlayer(i, method)) {
-				PushStyleColor(ImGuiCol_Button, Functions::GetColorFromColorID(p->fields.colorID));
+				PushStyleColor(ImGuiCol_Button, Functions::GetColorFromColorID(sdk::Player_colorID(p)));
 				if (Button(Functions::getplayername(i), { -1,0 }))
-					for (auto& t : Functions::g_Territories) if (t) t->fields._player = p;
+					for (auto& t : Functions::g_Territories) if (t) sdk::Territory_set_player(t, p);
 				PopStyleColor();
 			}
 		}
 		if (Functions::GetPlayer(0, method)) {
 			PushStyleColor(ImGuiCol_Button, { 0.3f,0.3f,0.3f,1 });
 			if (Button("No One", { -1,0 }))
-				for (auto& t : Functions::g_Territories) if (t) t->fields._player = nullptr;
+				for (auto& t : Functions::g_Territories) if (t) sdk::Territory_set_player(t, nullptr);
 			PopStyleColor();
 		}
 		Unindent(); Separator();
@@ -236,13 +236,16 @@ inline void DrawSectionHeader(const char* text) {
 	std::transform(search.begin(), search.end(), search.begin(), ::tolower);
 
 	for (auto& t : Functions::g_Territories) {
-		if (!t || !t->fields.name) continue;
-		std::string name = Functions::il2cppStringToStdString(t->fields.name);
+		if (!t) continue;
+		System_String_o* nameStr = sdk::Territory_name(t);
+		if (!nameStr) continue;
+		std::string name = sdk::string_to_std(nameStr);
 		std::string cmp = name; std::transform(cmp.begin(), cmp.end(), cmp.begin(), ::tolower);
 		if (!search.empty() && cmp.find(search) == std::string::npos) continue;
 		if (!shown.insert(name).second) continue;
 
-		ImVec4 color = t->fields._player ? Functions::GetColorFromColorID(t->fields._player->fields.colorID) : ImVec4(0.4f, 0.4f, 0.4f, 1);
+		Player_o* tplayer = sdk::Territory_player(t);
+		ImVec4 color = tplayer ? Functions::GetColorFromColorID(sdk::Player_colorID(tplayer)) : ImVec4(0.4f, 0.4f, 0.4f, 1);
 		std::string id = std::to_string((uintptr_t)t);
 
 		PushStyleColor(ImGuiCol_Button, color);
@@ -255,14 +258,15 @@ inline void DrawSectionHeader(const char* text) {
 
 		if (expanded == t) {
 			Columns(1); Indent(); Separator();
-			if (Button(("Toggle Capital##" + id).c_str())) t->fields._isCapital = !t->fields._isCapital;
+			if (Button(("Toggle Capital##" + id).c_str())) sdk::Territory_set_isCapital(t, !sdk::Territory_isCapital(t));
 
 			Separator();
 			int& local = troopInputs[id];
 			InputInt(("##TroopInput" + id).c_str(), &local);
 			SameLine();
 			if (Button(("Set Troops##" + id).c_str())) {
-				t->fields._units.fields.hiddenValue = Functions::Encrypt(local, t->fields._units.fields.currentCryptoKey, method);
+				int key = sdk::Territory_currentCryptoKey(t);
+				sdk::Territory_set_hiddenValue(t, Functions::Encrypt(local, key, method));
 				local = 0;
 			}
 
@@ -274,13 +278,13 @@ inline void DrawSectionHeader(const char* text) {
 				Indent(); Separator(); TextColored({ 1,0,0,1 }, "Give this territory to:");
 				for (int i = 0; i < 6; i++) {
 					if (auto* p = Functions::GetPlayer(i, method)) {
-						PushStyleColor(ImGuiCol_Button, Functions::GetColorFromColorID(p->fields.colorID));
-						if (Button(Functions::getplayername(i), { -1,0 })) { t->fields._player = p; giveToPlayerExpanded = nullptr; }
+						PushStyleColor(ImGuiCol_Button, Functions::GetColorFromColorID(sdk::Player_colorID(p)));
+						if (Button(Functions::getplayername(i), { -1,0 })) { sdk::Territory_set_player(t, p); giveToPlayerExpanded = nullptr; }
 						PopStyleColor();
 					}
 				}
 				PushStyleColor(ImGuiCol_Button, { 0.3f,0.3f,0.3f,1 });
-				if (Button(("No One##" + id).c_str(), { -1,0 })) { t->fields._player = nullptr; giveToPlayerExpanded = nullptr; }
+				if (Button(("No One##" + id).c_str(), { -1,0 })) { sdk::Territory_set_player(t, nullptr); giveToPlayerExpanded = nullptr; }
 				PopStyleColor();
 				Unindent(); Separator();
 			}

@@ -187,6 +187,7 @@
     <ClCompile Include="kiero\minhook\src\hook.c" />
     <ClCompile Include="kiero\minhook\src\trampoline.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sdk_accessors.cpp" />
     <ClCompile Include="vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +253,9 @@
     <ClInclude Include="PaternScan.hpp" />
     <ClInclude Include="Lists.hpp" />
     <ClInclude Include="sdk.h" />
+    <ClInclude Include="sdk_accessors.h" />
+    <ClInclude Include="sdk_types.h" />
+    <ClInclude Include="il2cpp_exports.h" />
     <ClInclude Include="vec.h" />
     <ClInclude Include="vec2.h" />
   </ItemGroup>

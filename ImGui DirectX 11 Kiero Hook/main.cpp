@@ -12,7 +12,7 @@
 #include <iostream>
 #include <PaternScan.hpp>
 #include <intrin.h>
-#include "il2cpp.h"
+#include "il2cpp_exports.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -23,13 +23,13 @@ ID3D11Device* pDevice = NULL;
 ID3D11DeviceContext* pContext = NULL;
 ID3D11RenderTargetView* mainRenderTargetView;
 
-//void CreateConsole() {
-//	AllocConsole();
-//	AttachConsole(GetCurrentProcessId());
-//	SetConsoleTitle("IL2CPP");
-//	FILE* f;
-//	freopen_s(&f, "CONOUT$", "w", stdout);
-//}
+void CreateConsole() {
+	AllocConsole();
+	AttachConsole(GetCurrentProcessId());
+	SetConsoleTitle("IL2CPP");
+	FILE* f;
+	freopen_s(&f, "CONOUT$", "w", stdout);
+}
 
 void initvars() {
 	if (IL2CPP::Initialize(true)) {
@@ -42,6 +42,11 @@ void initvars() {
 	}
 	sdk::Base = (uintptr_t)GetModuleHandleA(NULL);
 	sdk::GameAssembly = (uintptr_t)GetModuleHandleA("GameAssembly.dll");
+
+	if (il2cpp_exp::init())
+		printf("[ DEBUG ] il2cpp exports bound\n");
+	else
+		printf("[ DEBUG ] il2cpp exports bind FAILED\n");
 }
 
 void Log(uintptr_t address, const char* name) {
@@ -63,8 +68,23 @@ bool find_sigs() {
 
 	Offsets::GetPlayer = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(Network, "GetPlayer");
 
-	Offsets::Encrypt = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(ObscuredInt, "Encrypt");
+	Offsets::Encrypt      = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(ObscuredInt, "Encrypt");
 	Offsets::GetDecrypted = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(ObscuredInt, "GetDecrypted");
+
+
+	Offsets::DServerApi_Call = (uintptr_t)il2cpp_exp::find_method(
+		"DServerApi", "Call", /*param_count*/ 2, /*param_name*/ "parameters", /*param_index*/ 1);
+	Log(Offsets::DServerApi_Call, "DServerApi.Call");
+
+
+	if (void* gmClass = il2cpp_exp::find_class("GameManager"))
+	{
+		il2cpp_exp::runtime_class_init(gmClass);
+		Offsets::isFogOfWar_Field = il2cpp_exp::find_field(gmClass, "isFogOfWar");
+		Log((uintptr_t)Offsets::isFogOfWar_Field, "isFogOfWar FieldInfo");
+	}
+
+	sdk::resolve_game_offsets();
 
 	return true;
 }
@@ -88,10 +108,10 @@ if (MH_CreateHook(reinterpret_cast<LPVOID*>(Offsets::IsVisible), &Functions::Ter
 
 //"Signature": "void DServerApi__Call (DServerApi_o* __this, DServerApi_delegateLoaded_o* OnLoadedCall, System_Collections_Generic_Dictionary_string__object__o* parameters, const MethodInfo* method);",
 
-if (MH_CreateHook(reinterpret_cast<LPVOID*>(sdk::GameAssembly + 20169408), &Functions::DServerApi__Call__hk, (LPVOID*)&Functions::DServerApi__Call__org) == MH_OK)
+if (Offsets::DServerApi_Call &&
+	MH_CreateHook(reinterpret_cast<LPVOID*>(Offsets::DServerApi_Call), &Functions::DServerApi__Call__hk, (LPVOID*)&Functions::DServerApi__Call__org) == MH_OK)
 {
-
-	MH_EnableHook(reinterpret_cast<LPVOID*>(sdk::GameAssembly + 20169408));
+	MH_EnableHook(reinterpret_cast<LPVOID*>(Offsets::DServerApi_Call));
 }
 
 }
