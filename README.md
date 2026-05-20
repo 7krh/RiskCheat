@@ -15,7 +15,7 @@
 ---
 
 ## Overview
-RiskCheat — a research & educational scaffold for **Risk: Global Domination**.  
+RiskCheat - a research & educational scaffold for **Risk: Global Domination**.  
 This repository includes the base code, starter modules, and ideas that you can expand with more cheats and functionality (such as dice control).  
 
 ---
