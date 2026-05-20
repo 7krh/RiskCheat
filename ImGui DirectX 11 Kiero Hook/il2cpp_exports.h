@@ -106,9 +106,6 @@ namespace il2cpp_exp
         return nullptr;
     }
 
-    // Find a method by class + name, with optional parameter-name filter to pick a specific overload.
-    // param_name picks the parameter at position param_index (0-based) and matches it by name.
-    // Pass param_count_filter = -1 to skip param count filtering.
     inline void* find_method(const char* class_name,
                              const char* method_name,
                              int param_count_filter = -1,
@@ -136,8 +133,6 @@ namespace il2cpp_exp
                 if (!pname || strcmp(pname, param_name) != 0) continue;
             }
 
-            // method struct starts with: const char* name, then function pointer
-            // il2cpp MethodInfo layout: m_pMethodPointer is at offset 0
             return *reinterpret_cast<void**>(m);
         }
         return nullptr;

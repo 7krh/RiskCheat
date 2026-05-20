@@ -1,17 +1,12 @@
 #pragma once
-#include "vec.h"
-#include "vec2.h"
 #include <string>
+#include <unordered_set>
+#include <algorithm>
 #include "il2cpp_resolver.hpp"
-#include "Lists.hpp"
-#include <intrin.h>
-#include <iostream>
 #include "sdk.h"
 #include "il2cpp_exports.h"
 #include "sdk_accessors.h"
-#include <Windows.h>
-#include <unordered_set>
-#include <algorithm>
+#include <imgui/imgui.h>
 
 namespace Functions
 {

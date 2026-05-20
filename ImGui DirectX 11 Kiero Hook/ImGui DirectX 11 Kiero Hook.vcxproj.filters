@@ -81,13 +81,7 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="vec2.cpp">
-      <Filter>Header Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Callback.cpp">
-      <Filter>Header Files\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Dumper.cpp">
       <Filter>Header Files\Game</Filter>
     </ClCompile>
     <ClCompile Include="..\Il2cpp_Resolver\Cache.cpp">
@@ -205,22 +199,10 @@
     <ClInclude Include="sdk.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="vec.h">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="vec2.h">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
     <ClInclude Include="functions.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Lists.hpp">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Callback.hpp">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Dumper.hpp">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="..\Il2cpp_Resolver\Cache.hpp">
@@ -318,9 +300,6 @@
     </ClInclude>
     <ClInclude Include="PaternScan.hpp">
       <Filter>Header Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="il2cpp.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -173,7 +173,6 @@
     <ClCompile Include="..\Il2cpp_Resolver\Unity\Obfuscators.cpp" />
     <ClCompile Include="..\Il2cpp_Resolver\Utils\Helper.cpp" />
     <ClCompile Include="Callback.cpp" />
-    <ClCompile Include="Dumper.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -188,7 +187,6 @@
     <ClCompile Include="kiero\minhook\src\trampoline.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="sdk_accessors.cpp" />
-    <ClCompile Include="vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="kiero\minhook\dll_resources\MinHook.def" />
@@ -229,9 +227,7 @@
     <ClInclude Include="..\Il2cpp_Resolver\Utils\Joaat.hpp" />
     <ClInclude Include="..\Il2cpp_Resolver\Utils\VFunc.hpp" />
     <ClInclude Include="Callback.hpp" />
-    <ClInclude Include="Dumper.hpp" />
     <ClInclude Include="functions.h" />
-    <ClInclude Include="il2cpp.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
@@ -251,13 +247,10 @@
     <ClInclude Include="kiero\minhook\src\hde\table64.h" />
     <ClInclude Include="kiero\minhook\src\trampoline.h" />
     <ClInclude Include="PaternScan.hpp" />
-    <ClInclude Include="Lists.hpp" />
     <ClInclude Include="sdk.h" />
     <ClInclude Include="sdk_accessors.h" />
     <ClInclude Include="sdk_types.h" />
     <ClInclude Include="il2cpp_exports.h" />
-    <ClInclude Include="vec.h" />
-    <ClInclude Include="vec2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

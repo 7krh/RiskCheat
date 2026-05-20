@@ -1,18 +1,11 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5): warning MSB8027: Two or more files with the name of Callback.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\Il2cpp_Resolver\Functions\Callback.cpp, Callback.cpp.
   main.cpp
-C:\Users\7krh\Desktop\projects\New folder (9) - Copy\RiskCheat\ImGui DirectX 11 Kiero Hook\vec.h(226,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'main.cpp')
-  
-C:\Users\7krh\Desktop\projects\New folder (9) - Copy\RiskCheat\ImGui DirectX 11 Kiero Hook\PaternScan.hpp(24,13): warning C4018: '>=': signed/unsigned mismatch
-  (compiling source file 'main.cpp')
-  
-C:\Users\7krh\Desktop\projects\New folder (9) - Copy\RiskCheat\ImGui DirectX 11 Kiero Hook\main.cpp(171,35): warning C4305: '=': truncation from 'double' to 'float'
-  sdk_accessors.cpp
+C:\Users\7krh\Desktop\projects\New folder (9) - Copy\RiskCheat\ImGui DirectX 11 Kiero Hook\main.cpp(135,35): warning C4305: '=': truncation from 'double' to 'float'
 x64\Release\Callback.obj : warning LNK4042: object specified more than once; extras ignored
   Generating code
-  54 of 2144 functions ( 2.5%) were compiled, the rest were copied from previous compilation.
-    2 functions were new in current compilation
-    45 functions had inline decision re-evaluated but remain unchanged
+  141 of 2108 functions ( 6.7%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    156 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ImGui DirectX 11 Kiero Hook.vcxproj -> C:\Users\7krh\Desktop\projects\New folder (9) - Copy\RiskCheat\x64\Release\RiskCheat.dll
   'pwsh.exe' is not recognized as an internal or external command,

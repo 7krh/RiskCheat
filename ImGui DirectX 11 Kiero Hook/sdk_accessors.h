@@ -33,7 +33,6 @@ namespace Offsets {
         int DictEntry_size = -1;
 
         int List_items = -1;
-        int List_size = -1;
     };
     inline GameOff Game;
 }

@@ -6,12 +6,7 @@
 #include "Functions.h"
 #include "kiero/minhook/include/MinHook.h"
 #include "il2cpp_resolver.hpp"
-#include "Lists.hpp"
 #include "Callback.hpp"
-#include <Utils/VFunc.hpp>
-#include <iostream>
-#include <PaternScan.hpp>
-#include <intrin.h>
 #include "il2cpp_exports.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -32,16 +27,12 @@ void CreateConsole() {
 }
 
 void initvars() {
-	if (IL2CPP::Initialize(true)) {
-		printf("[ DEBUG ] Il2Cpp initialized\n");
-	}
-	else {
+	if (!IL2CPP::Initialize(true)) {
 		printf("[ DEBUG ] Il2Cpp initialize failed, quitting...");
 		Sleep(300);
 		exit(0);
 	}
-	sdk::Base = (uintptr_t)GetModuleHandleA(NULL);
-	sdk::GameAssembly = (uintptr_t)GetModuleHandleA("GameAssembly.dll");
+	printf("[ DEBUG ] Il2Cpp initialized\n");
 
 	if (il2cpp_exp::init())
 		printf("[ DEBUG ] il2cpp exports bound\n");
@@ -49,43 +40,27 @@ void initvars() {
 		printf("[ DEBUG ] il2cpp exports bind FAILED\n");
 }
 
-void Log(uintptr_t address, const char* name) {
-	printf("[ LOG ] %s: 0x%llX\n", name, address);
-}
-#define DEBUG 
-
-
 bool find_sigs() {
-	Unity::il2cppClass* RiskInventory = IL2CPP::Class::Find("RiskInventory");
-	Unity::il2cppClass* Territory = IL2CPP::Class::Find("Territory");
+	auto* RiskInventory = IL2CPP::Class::Find("RiskInventory");
+	auto* Territory    = IL2CPP::Class::Find("Territory");
+	auto* Network      = IL2CPP::Class::Find("Network");
+	auto* ObscuredInt  = IL2CPP::Class::Find("CodeStage.AntiCheat.ObscuredTypes.ObscuredInt");
 
-	Unity::il2cppClass* Network = IL2CPP::Class::Find("Network");
-	Unity::il2cppClass* ObscuredInt = IL2CPP::Class::Find("CodeStage.AntiCheat.ObscuredTypes.ObscuredInt");
-
-	Offsets::HasItem = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(RiskInventory, "HasItem");
-
-	Offsets::IsVisible = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(Territory, "IsVisible");
-
-	Offsets::GetPlayer = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(Network, "GetPlayer");
-
+	Offsets::HasItem      = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(RiskInventory, "HasItem");
+	Offsets::IsVisible    = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(Territory, "IsVisible");
+	Offsets::GetPlayer    = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(Network, "GetPlayer");
 	Offsets::Encrypt      = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(ObscuredInt, "Encrypt");
 	Offsets::GetDecrypted = (uintptr_t)IL2CPP::Class::Utils::GetMethodPointer(ObscuredInt, "GetDecrypted");
 
-
 	Offsets::DServerApi_Call = (uintptr_t)il2cpp_exp::find_method(
-		"DServerApi", "Call", /*param_count*/ 2, /*param_name*/ "parameters", /*param_index*/ 1);
-	Log(Offsets::DServerApi_Call, "DServerApi.Call");
+		"DServerApi", "Call", 2, "parameters", 1);
 
-
-	if (void* gmClass = il2cpp_exp::find_class("GameManager"))
-	{
+	if (void* gmClass = il2cpp_exp::find_class("GameManager")) {
 		il2cpp_exp::runtime_class_init(gmClass);
 		Offsets::isFogOfWar_Field = il2cpp_exp::find_field(gmClass, "isFogOfWar");
-		Log((uintptr_t)Offsets::isFogOfWar_Field, "isFogOfWar FieldInfo");
 	}
 
 	sdk::resolve_game_offsets();
-
 	return true;
 }
 
@@ -93,27 +68,16 @@ bool find_sigs() {
 
 
 
+static void InstallHook(uintptr_t target, LPVOID detour, LPVOID* original) {
+	if (!target) return;
+	if (MH_CreateHook(reinterpret_cast<LPVOID*>(target), detour, original) == MH_OK)
+		MH_EnableHook(reinterpret_cast<LPVOID*>(target));
+}
+
 void EnableHooks() {
-	
-
-if (MH_CreateHook(reinterpret_cast<LPVOID*>(Offsets::HasItem), &Functions::RiskInventory__HasItem_hk, (LPVOID*)&Functions::RiskInventory__HasItem_org) == MH_OK)
-{
-	MH_EnableHook(reinterpret_cast<LPVOID*>(Offsets::HasItem));
-}
-
-if (MH_CreateHook(reinterpret_cast<LPVOID*>(Offsets::IsVisible), &Functions::Territory__IsVisible_hk, (LPVOID*)&Functions::Territory__IsVisible) == MH_OK)
-{
-	MH_EnableHook(reinterpret_cast<LPVOID*>(Offsets::IsVisible));
-}
-
-//"Signature": "void DServerApi__Call (DServerApi_o* __this, DServerApi_delegateLoaded_o* OnLoadedCall, System_Collections_Generic_Dictionary_string__object__o* parameters, const MethodInfo* method);",
-
-if (Offsets::DServerApi_Call &&
-	MH_CreateHook(reinterpret_cast<LPVOID*>(Offsets::DServerApi_Call), &Functions::DServerApi__Call__hk, (LPVOID*)&Functions::DServerApi__Call__org) == MH_OK)
-{
-	MH_EnableHook(reinterpret_cast<LPVOID*>(Offsets::DServerApi_Call));
-}
-
+	InstallHook(Offsets::HasItem,        &Functions::RiskInventory__HasItem_hk, (LPVOID*)&Functions::RiskInventory__HasItem_org);
+	InstallHook(Offsets::IsVisible,      &Functions::Territory__IsVisible_hk,   (LPVOID*)&Functions::Territory__IsVisible);
+	InstallHook(Offsets::DServerApi_Call,&Functions::DServerApi__Call__hk,      (LPVOID*)&Functions::DServerApi__Call__org);
 }
 
 void InitImGui()
@@ -179,10 +143,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 			return oPresent(pSwapChain, SyncInterval, Flags);
 	}
 
-	pContext->RSGetViewports(&vars::vps, &vars::viewport);
-	vars::screen_size = { vars::viewport.Width, vars::viewport.Height };
-	vars::screen_center = { vars::viewport.Width / 2.0f, vars::viewport.Height / 2.0f };
-
 	auto begin_scene = [&]() {
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
@@ -195,81 +155,8 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 	begin_scene();
 
-	auto isFrames = ImGui::GetFrameCount();
-	static float isRed = 0.0f, isGreen = 0.01f, isBlue = 0.0f;
-	if (isFrames % 1 == 0)
-	{
-		if (isGreen == 0.01f && isBlue == 0.0f)
-		{
-			isRed += 0.01f;
-
-		}
-		if (isRed > 0.99f && isBlue == 0.0f)
-		{
-			isRed = 1.0f;
-
-			isGreen += 0.01f;
-
-		}
-		if (isGreen > 0.99f && isBlue == 0.0f)
-		{
-			isGreen = 1.0f;
-
-			isRed -= 0.01f;
-
-		}
-		if (isRed < 0.01f && isGreen == 1.0f)
-		{
-			isRed = 0.0f;
-
-			isBlue += 0.01f;
-
-		}
-		if (isBlue > 0.99f && isRed == 0.0f)
-		{
-			isBlue = 1.0f;
-
-			isGreen -= 0.01f;
-
-		}
-		if (isGreen < 0.01f && isBlue == 1.0f)
-		{
-			isGreen = 0.0f;
-
-			isRed += 0.01f;
-
-		}
-		if (isRed > 0.99f && isGreen == 0.0f)
-		{
-			isRed = 1.0f;
-
-			isBlue -= 0.01f;
-
-		}
-		if (isBlue < 0.01f && isGreen == 0.0f)
-		{
-			isBlue = 0.0f;
-
-			isRed -= 0.01f;
-
-			if (isRed < 0.01f)
-				isGreen = 0.01f;
-
-		}
-	}
-	vars::Rainbow = ImVec4(isRed, isGreen, isBlue, 1.0f);
-
-	
-
-	POINT mousePos;
-	GetCursorPos(&mousePos);
-	ScreenToClient(window, &mousePos);
-
 	if (show_menu)
-	{
 		DrawMenu();
-	}
-	
 
 	end_scene();
 
@@ -296,10 +183,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 void initchair()
 {
-#ifdef DEBUG
-	/*CreateConsole();
-	system("cls");*/
-#endif // DEBUG
 	initvars();
 	find_sigs();
 	IL2CPP::Callback::Initialize();
@@ -316,7 +199,6 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 		{
 			initchair();
 			init_hook = true;
-			vars::initil2cpp = true;
 		}
 	} while (!init_hook);
 	return TRUE;

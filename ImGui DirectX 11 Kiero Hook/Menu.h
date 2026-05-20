@@ -2,27 +2,12 @@
 #include "imgui/imgui.h"
 #include "sdk.h"
 #include "functions.h"
-#include "Dumper.hpp"
-#include "Lists.hpp"
 #include <string>
 #include <vector>
 #include <set>
 #include <algorithm>
 
 using namespace ImGui;
-
-void HelpMarker(const char* desc)
-{
-	ImGui::TextDisabled("[?]");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted(desc);
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
-}
 
 void ImGuiTheme2()
 {
